@@ -27,5 +27,18 @@ public class ChatRoom {
     Set<MemberChatroomMapping> memberChatroomMappingSet;
     LocalDateTime createdAt;
 
+    public MemberChatroomMapping addMember(Member member) {
+        if(this.memberChatroomMappingSet == null) {
+            this.memberChatroomMappingSet = new HashSet<>();
+        }
 
+        MemberChatroomMapping memberChatroomMapping = MemberChatroomMapping.builder()
+                .member(member)
+                .chatroom(this)
+                .build();
+
+        this.memberChatroomMappingSet.add(memberChatroomMapping);
+
+        return memberChatroomMapping;
+    }
 }

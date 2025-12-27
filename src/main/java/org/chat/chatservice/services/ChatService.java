@@ -1,5 +1,6 @@
 package org.chat.chatservice.services;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.chat.chatservice.entities.ChatRoom;
@@ -29,10 +30,8 @@ public class ChatService { // A라는 유저가 1번,2번,3번방에 들어갔�
         chatRoom = chatroomRepository.save(chatRoom);
 
         // 방을 만든 사람을 매핑 테이블에 등록
-        MemberChatroomMapping mapping = MemberChatroomMapping.builder()
-                .member(member)
-                .chatroom(chatRoom)
-                .build();
+        MemberChatroomMapping mapping = chatRoom.addMember(member);
+
         memberChatroomMappingRepository.save(mapping);
 
         return chatRoom; // 3. 저장된 방 객체 반환
@@ -60,6 +59,7 @@ public class ChatService { // A라는 유저가 1번,2번,3번방에 들어갔�
     }
 
     // 참여한방 나오기
+    @Transactional
     public Boolean exitChatroom(Member member, Long chatroomId) {
         if(!memberChatroomMappingRepository.existsByMemberIdAndChatroomId(member.getId(), chatroomId)) {
             log.info("참여하지 않은 방입니다.");
