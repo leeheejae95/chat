@@ -6,6 +6,11 @@ spring:
     username: service_user
     password: service_user
     driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
   security:
     oauth2:
       client:
