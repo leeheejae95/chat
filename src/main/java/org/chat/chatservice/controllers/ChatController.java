@@ -2,6 +2,7 @@ package org.chat.chatservice.controllers;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.chat.chatservice.dto.ChatRoomDto;
 import org.chat.chatservice.entities.ChatRoom;
 import org.chat.chatservice.services.ChatService;
 import org.chat.chatservice.vo.CustomOAuth2User;
@@ -19,8 +20,9 @@ public class ChatController {
     private final ChatService chatService;
 
     @PostMapping("/create")
-    public ChatRoom creatChatroom(@AuthenticationPrincipal CustomOAuth2User oAuth2User, @RequestParam String title) {
-        return chatService.createChatRoom(oAuth2User.getMember(), title);
+    public ChatRoomDto creatChatroom(@AuthenticationPrincipal CustomOAuth2User oAuth2User, @RequestParam String title) {
+        ChatRoom chatRoom = chatService.createChatRoom(oAuth2User.getMember(), title);
+        return ChatRoomDto.from(chatRoom);
     }
 
     @PostMapping("/join/{chatroomId}")
@@ -34,8 +36,11 @@ public class ChatController {
     }
 
     @GetMapping("/chatList/{memberId}")
-    public List<ChatRoom> chatroomList(@AuthenticationPrincipal CustomOAuth2User oAuth2User) {
-        return chatService.getChatroomlist(oAuth2User.getMember());
+    public List<ChatRoomDto> chatroomList(@AuthenticationPrincipal CustomOAuth2User oAuth2User) {
+        List<ChatRoom> chatRoom = chatService.getChatroomlist(oAuth2User.getMember());
+        return chatRoom.stream()
+                .map(ChatRoomDto::from)
+                .toList();
     }
 
 }
