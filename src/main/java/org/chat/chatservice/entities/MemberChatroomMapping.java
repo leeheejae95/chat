@@ -1,8 +1,16 @@
 package org.chat.chatservice.entities;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@Getter
 @Entity
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class MemberChatroomMapping {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,5 +25,4 @@ public class MemberChatroomMapping {
     @JoinColumn(name = "chatroom_id")
     @ManyToOne
     ChatRoom chatroom;
-
 }
