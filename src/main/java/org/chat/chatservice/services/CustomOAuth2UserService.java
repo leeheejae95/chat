@@ -2,7 +2,6 @@ package org.chat.chatservice.services;
 
 import lombok.RequiredArgsConstructor;
 import org.chat.chatservice.entities.Member;
-import org.chat.chatservice.entities.MemberRole;
 import org.chat.chatservice.enums.Gender;
 import org.chat.chatservice.repositories.MemberRepository;
 import org.chat.chatservice.vo.CustomOAuth2User;
