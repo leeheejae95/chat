@@ -10,6 +10,7 @@ import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Controller;
@@ -23,6 +24,7 @@ import java.util.*;
 public class StompChatController {
 
     private final ChatService chatService;
+    private final SimpMessagingTemplate simpMessagingTemplate;
 
     @MessageMapping("/chats/{chatroomId}") // /pub/chats
     @SendTo("/sub/chats/{chatroomId}") // /sub/chats을 구독하고 있는 클라이언트에게 메시지 전달
@@ -31,6 +33,7 @@ public class StompChatController {
 
         CustomOAuth2User oAuth2User = (CustomOAuth2User) ((OAuth2AuthenticationToken) principal).getPrincipal();
         Message message = chatService.saveMessage(oAuth2User.getMember(), chatroomId, payload.get("message"));
+        simpMessagingTemplate.convertAndSend("/sub/chats/news", chatroomId); // 채팅방에 새 소식이 왔다라는걸 알림
         return new ChatMessageDto(principal.getName(), payload.get("message"));
     }
 }

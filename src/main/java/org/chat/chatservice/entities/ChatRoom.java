@@ -1,15 +1,13 @@
 package org.chat.chatservice.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.*;
 
 @Getter
+@Setter
 @Entity
 @Builder
 @AllArgsConstructor
@@ -25,7 +23,15 @@ public class ChatRoom {
 
     @OneToMany(mappedBy = "chatroom") // 연관관계 주인 설정
     Set<MemberChatroomMapping> memberChatroomMappingSet;
+
     LocalDateTime createdAt;
+
+    @Transient
+    Boolean hasNewMessage; // 새로운 메시지가 있는지 구분
+
+    public void setHasNewMessage(Boolean hasNewMessage) {
+        this.hasNewMessage = hasNewMessage;
+    }
 
     public MemberChatroomMapping addMember(Member member) {
         if(this.memberChatroomMappingSet == null) {

@@ -41,14 +41,16 @@ public class ChatService { // A라는 유저가 1번,2번,3번방에 들어갔�
     }
 
     // 다른사람이 만들어 놓은 채팅방 입장
-    public Boolean joinChat(Member member, Long chatroomId) {
-
-        if(memberChatroomMappingRepository.existsByMemberIdAndChatroomId(member.getId(), chatroomId)) {
+    public Boolean joinChat(Member member, Long newChatroomId, Long currentChatroomId) {
+        if(currentChatroomId != null) {
+            updateLastCheckedAt(member, currentChatroomId); // currentChatroomId : 현재 채팅방ID
+        }
+        if(memberChatroomMappingRepository.existsByMemberIdAndChatroomId(member.getId(), newChatroomId)) {
             log.info("이미 참여한 채팅방입니다.");
             return false;
         }
 
-        ChatRoom chatRoom = chatroomRepository.findById(chatroomId).get();
+        ChatRoom chatRoom = chatroomRepository.findById(newChatroomId).get();
 
         // 참여 안한 채팅방 명부에 올리기
         MemberChatroomMapping memberChatroomMapping = MemberChatroomMapping.builder()
@@ -59,6 +61,15 @@ public class ChatService { // A라는 유저가 1번,2번,3번방에 들어갔�
         memberChatroomMappingRepository.save(memberChatroomMapping);
 
         return true;
+    }
+
+    public void updateLastCheckedAt(Member member, Long currentChatroomId) {
+        MemberChatroomMapping memberChatroomMapping = memberChatroomMappingRepository.findByMemberIdAndChatroomId(member.getId(), currentChatroomId)
+                .orElseThrow();
+
+        memberChatroomMapping.updateLastCheckedAt();
+
+        memberChatroomMappingRepository.save(memberChatroomMapping);
     }
 
     // 참여한방 나오기
@@ -80,7 +91,11 @@ public class ChatService { // A라는 유저가 1번,2번,3번방에 들어갔�
         List<MemberChatroomMapping> list = memberChatroomMappingRepository.findAllByMemberId(member.getId());
 
         return list.stream()
-                .map(MemberChatroomMapping::getChatroom)
+                .map(memberChatroomMapping -> {
+                    ChatRoom chatroom = memberChatroomMapping.getChatroom();
+                    chatroom.setHasNewMessage(messageRepository.existsByChatroomIdAndCreatedAtAfter(chatroom.getId(), memberChatroomMapping.getLastCheckedAt()));
+                    return chatroom;
+                })
                 .toList();
     }
 
@@ -91,6 +106,7 @@ public class ChatService { // A라는 유저가 1번,2번,3번방에 들어갔�
                 .text(text)
                 .member(member)
                 .chatroom(chatroom)
+                .createdAt(LocalDateTime.now())
                 .build();
 
         return messageRepository.save(message);
