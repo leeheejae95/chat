@@ -6,8 +6,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.chat.chatservice.entities.ChatRoom;
 import org.chat.chatservice.entities.Member;
 import org.chat.chatservice.entities.MemberChatroomMapping;
+import org.chat.chatservice.entities.Message;
 import org.chat.chatservice.repositories.ChatroomRepository;
 import org.chat.chatservice.repositories.MemberChatroomMappingRepository;
+import org.chat.chatservice.repositories.MessageRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -20,6 +22,7 @@ public class ChatService { // A라는 유저가 1번,2번,3번방에 들어갔�
 
     private final ChatroomRepository chatroomRepository;
     private final MemberChatroomMappingRepository memberChatroomMappingRepository;
+    private final MessageRepository messageRepository;
 
     // 채팅방 생성
     public ChatRoom createChatRoom(Member member, String title) {
@@ -74,10 +77,26 @@ public class ChatService { // A라는 유저가 1번,2번,3번방에 들어갔�
 
     // 채팅방 목록 가져오기
     public List<ChatRoom> getChatroomlist(Member member) {
-        List<MemberChatroomMapping> list = memberChatroomMappingRepository.findAllMemberId(member.getId());
+        List<MemberChatroomMapping> list = memberChatroomMappingRepository.findAllByMemberId(member.getId());
 
         return list.stream()
                 .map(MemberChatroomMapping::getChatroom)
                 .toList();
+    }
+
+    public Message saveMessage(Member member, Long chatroomId ,String text) {
+        ChatRoom chatroom = chatroomRepository.findById(chatroomId).get(); // 채팅방 조회
+
+        Message message = Message.builder()
+                .text(text)
+                .member(member)
+                .chatroom(chatroom)
+                .build();
+
+        return messageRepository.save(message);
+    }
+
+    public List<Message> getMessageList(Long chatroomId) {
+        return messageRepository.findAllByChatroomId(chatroomId);
     }
 }

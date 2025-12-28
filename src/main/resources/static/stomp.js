@@ -143,7 +143,7 @@ function showMessages(chatroomId) {
   $.ajax({
     type: 'GET',
     dataType: 'json',
-    url: '/api/chats/chatList/' + chatroomId + '/messages',
+    url: '/api/chats/' + chatroomId + '/messages',
     success: function (data) {
       console.log('data: ', data);
       for (let i = 0; i < data.length; i++) {
