@@ -2,8 +2,10 @@ package org.chat.chatservice.controllers;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.chat.chatservice.dto.ChatMessageDto;
 import org.chat.chatservice.dto.ChatRoomDto;
 import org.chat.chatservice.entities.ChatRoom;
+import org.chat.chatservice.entities.Message;
 import org.chat.chatservice.services.ChatService;
 import org.chat.chatservice.vo.CustomOAuth2User;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -43,4 +45,11 @@ public class ChatController {
                 .toList();
     }
 
+    @GetMapping("/{chatroomId}/message")
+    public List<ChatMessageDto> getMessageList(@PathVariable Long chatroomId) {
+        List<Message> messages = chatService.getMessageList(chatroomId);
+        return messages.stream()
+                .map(message -> new ChatMessageDto(message.getMember().getNickName(), message.getText()))
+                .toList();
+    }
 }
