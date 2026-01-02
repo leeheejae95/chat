@@ -9,8 +9,8 @@ spring:
     name: chat-service
   datasource:
     url: jdbc:mysql://localhost:3308/chat_service?serverTimezone=Asia/Seoul
-    username: service_user
-    password: service_user
+    username: your_name
+    password: your_password
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
@@ -37,7 +37,7 @@ spring:
             authorization-grant-type: authorization_code
             client-authentication-method: client_secret_post
           google:
-            client-id: your_google_client_id
+            client-id: your_ google_client-secret
             client-secret: your_ google_client-secret
             scope:
               - email
