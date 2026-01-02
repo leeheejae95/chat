@@ -11,8 +11,7 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.stereotype.Controller;
 
 import java.security.Principal;
@@ -31,7 +30,7 @@ public class StompChatController {
     public ChatMessageDto handlerMessage(Principal principal, @DestinationVariable Long chatroomId, @Payload Map<String, String> payload) { // 인증된 유저 정보를 파라미터로 받아옴
         log.info("{} sent {} in {}", principal.getName(), payload, chatroomId);
 
-        CustomOAuth2User oAuth2User = (CustomOAuth2User) ((OAuth2AuthenticationToken) principal).getPrincipal();
+        CustomOAuth2User oAuth2User = (CustomOAuth2User) ((AbstractAuthenticationToken) principal).getPrincipal();
         Message message = chatService.saveMessage(oAuth2User.getMember(), chatroomId, payload.get("message"));
         simpMessagingTemplate.convertAndSend("/sub/chats/news", chatroomId); // 채팅방에 새 소식이 왔다라는걸 알림
         return new ChatMessageDto(principal.getName(), payload.get("message"));
