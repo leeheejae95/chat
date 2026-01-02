@@ -10,6 +10,8 @@ import org.chat.chatservice.enums.MemberRole;
 import org.chat.chatservice.repositories.ChatroomRepository;
 import org.chat.chatservice.repositories.MemberRepository;
 import org.chat.chatservice.vo.CustomUserDetails;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -46,11 +48,9 @@ public class ConsultantService implements UserDetailsService {
         return MemberDto.from(member); // 엔티티 객체를 DTO로 변환해 리턴
     }
 
-    public List<ChatRoomDto> getAllChatrooms() {
-        List<ChatRoom> chatRoomList = chatroomRepository.findAll();
+    public Page<ChatRoomDto> getChatroomPage(Pageable pageable) {
+        Page<ChatRoom> chatRoomPage = chatroomRepository.findAll(pageable);
 
-        return chatRoomList.stream()
-                .map(ChatRoomDto::from)
-                .toList();
+        return chatRoomPage.map(ChatRoomDto::from);
     }
 }
