@@ -67,7 +67,7 @@ function createChatroom() {
   $.ajax({
     type: 'POST',
     dataType: 'json',
-    url: '/chats?title=' + $("#chatroom-title").val(),
+    url: '/api/chats/create?title=' + $("#chatroom-title").val(),
     success: function (data) {
       console.log('data: ', data);
       showChatrooms(0);
@@ -167,7 +167,7 @@ function showMessages(chatroomId) {
   $.ajax({
     type: 'GET',
     dataType: 'json',
-    url: '/chats/' + chatroomId + '/messages',
+    url: '/api/chats/' + chatroomId + '/message',
     success: function (data) {
       console.log('data: ', data);
       for (let i = 0; i < data.length; i++) {
@@ -193,7 +193,7 @@ function joinChatroom(chatroomId) {
   $.ajax({
     type: 'POST',
     dataType: 'json',
-    url: '/chats/' + chatroomId + getRequestParam(currentChatroomId),
+    url: '/api/chats/join/' + chatroomId + getRequestParam(currentChatroomId),
     success: function (data) {
       console.log('data: ', data);
       enterChatroom(chatroomId, data);
@@ -218,7 +218,7 @@ function leaveChatroom() {
   $.ajax({
     type: 'DELETE',
     dataType: 'json',
-    url: '/chats/' + chatroomId,
+    url: '/api/chats/exit/' + chatroomId,
     success: function (data) {
       console.log('data: ', data);
       showChatrooms(0);
