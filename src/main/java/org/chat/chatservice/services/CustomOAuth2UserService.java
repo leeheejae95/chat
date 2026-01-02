@@ -40,7 +40,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 .phoneNumber(attributeMap.get("phoneNumber").toString())
                 .gender(Gender.valueOf(attributeMap.get("gender").toString().toLowerCase()))
                 .birthDay(getDate(attributeMap))
-                .role(attributeMap.get("role").toString())
+                .role("ROLE_USER")
                 .build();
         return member;
     }

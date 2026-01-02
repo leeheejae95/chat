@@ -32,7 +32,7 @@ public class SecurityConfiguration {
                 .securityMatcher("/consultants/**", "/login") // 시큐리티에서 제공해주는 폼 로그인 사용
                 .authorizeHttpRequests(request -> request
                         .requestMatchers(HttpMethod.POST, "/consultants").permitAll()
-                        .anyRequest().authenticated())
+                        .anyRequest().hasRole("CONSULTANT")) // 상담사만 접근가능
                 .formLogin(Customizer.withDefaults())
                 .csrf(csrf -> csrf.disable());
 
