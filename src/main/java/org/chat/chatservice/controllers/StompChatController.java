@@ -32,7 +32,7 @@ public class StompChatController {
 
         CustomOAuth2User oAuth2User = (CustomOAuth2User) ((AbstractAuthenticationToken) principal).getPrincipal();
         Message message = chatService.saveMessage(oAuth2User.getMember(), chatroomId, payload.get("message"));
-        simpMessagingTemplate.convertAndSend("/sub/chats/news", chatroomId); // 채팅방에 새 소식이 왔다라는걸 알림
+        simpMessagingTemplate.convertAndSend("/sub/chats/updates", chatService.getChatRoom(chatroomId)); // 채팅방에 새 소식이 왔다라는걸 알림
         return new ChatMessageDto(principal.getName(), payload.get("message"));
     }
 }

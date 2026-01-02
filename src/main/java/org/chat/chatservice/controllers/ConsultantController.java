@@ -5,10 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.chat.chatservice.dto.ChatRoomDto;
 import org.chat.chatservice.dto.MemberDto;
 import org.chat.chatservice.services.ConsultantService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -31,7 +31,7 @@ public class ConsultantController {
 
     @ResponseBody
     @GetMapping("/chats")
-    public List<ChatRoomDto> getAllChatrooms() {
-        return consultantService.getAllChatrooms();
+    public Page<ChatRoomDto> getChatroomPage(Pageable pageable) {
+        return consultantService.getChatroomPage(pageable);
     }
 }

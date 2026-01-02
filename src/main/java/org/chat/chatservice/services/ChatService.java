@@ -1,8 +1,8 @@
 package org.chat.chatservice.services;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.chat.chatservice.dto.ChatRoomDto;
 import org.chat.chatservice.entities.ChatRoom;
 import org.chat.chatservice.entities.Member;
 import org.chat.chatservice.entities.MemberChatroomMapping;
@@ -11,6 +11,7 @@ import org.chat.chatservice.repositories.ChatroomRepository;
 import org.chat.chatservice.repositories.MemberChatroomMappingRepository;
 import org.chat.chatservice.repositories.MessageRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -114,5 +115,12 @@ public class ChatService { // A라는 유저가 1번,2번,3번방에 들어갔�
 
     public List<Message> getMessageList(Long chatroomId) {
         return messageRepository.findAllByChatroomId(chatroomId);
+    }
+
+    @Transactional(readOnly = true)
+    public ChatRoomDto getChatRoom(Long chatroomId) {
+        ChatRoom chatroom = chatroomRepository.findById(chatroomId).get();
+
+        return ChatRoomDto.from(chatroom);
     }
 }
