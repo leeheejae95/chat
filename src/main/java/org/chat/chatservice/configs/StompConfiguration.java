@@ -11,7 +11,7 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 public class StompConfiguration implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) { // 클라이언트가 어떤 URL로 WebSocket 연결을 시도할지 결정
-        registry.addEndpoint("/stomp/chat");
+        registry.addEndpoint("/stomp/chats");
     }
 
     @Override
