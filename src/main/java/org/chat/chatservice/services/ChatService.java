@@ -66,8 +66,7 @@ public class ChatService { // A라는 유저가 1번,2번,3번방에 들어갔�
 
     public void updateLastCheckedAt(Member member, Long currentChatroomId) {
         MemberChatroomMapping memberChatroomMapping = memberChatroomMappingRepository.findByMemberIdAndChatroomId(member.getId(), currentChatroomId)
-                .orElseThrow();
-
+                .get();
         memberChatroomMapping.updateLastCheckedAt();
 
         memberChatroomMappingRepository.save(memberChatroomMapping);
