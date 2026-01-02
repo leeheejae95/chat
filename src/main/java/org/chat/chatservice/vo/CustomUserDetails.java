@@ -1,6 +1,5 @@
 package org.chat.chatservice.vo;
 
-import lombok.AllArgsConstructor;
 import org.chat.chatservice.entities.Member;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -8,13 +7,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
-@AllArgsConstructor
-public class CustomUserDetails implements UserDetails {
+public class CustomUserDetails extends CustomOAuth2User implements UserDetails {
 
-    private Member member;
-    public Member getMember() {
-        return this.member;
+    public CustomUserDetails(Member member, Map<String, Object> attributeMap) {
+        super(member, attributeMap);
     }
 
     @Override
